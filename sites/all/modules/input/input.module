@@ -40,6 +40,20 @@ function input_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
+  $items['input/search-history-delete'] = array(
+    'title' => 'Delete search history',
+    'page callback' => 'input_search_history_delete_page',
+    'access callback' => TRUE,
+  );
+  $items['admin/config/input'] = array(
+    'title' => 'Input module',
+    'description' => 'Settings for the Input module.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('input_admin_settings'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'input.admin.inc',
+    'file path' => drupal_get_path('module', 'input'),
+  );
   
   return $items;
 }
@@ -64,7 +78,7 @@ function input_simple_form($form, &$form_submit) {
 
 
 /**
- * Page demonstrating embedding a form on a page.
+ * Menu callback; page demonstrating embedding a form on a page.
  */
 function input_simple_page() {
   $build = array(
@@ -171,6 +185,10 @@ function input_form_alter(&$form, &$form_state, $form_id) {
       // user/autocomplete - Autocompletes usernames
       // taxonomy/autocomplete - Autocompletes taxonomy terms as a comma-separated list
       $form['search_block_form']['#autocomplete_path'] = 'input/search-autocomplete';
+      $form['clear'] = array(
+        '#type' => 'markup',
+        '#markup' => '<div style="float:left">' . l(t('Clear history'), 'input/search-history-delete', array('query' => array('destination' => 'input/examples'))) . '</div>',
+      );
       break;
   }
   return;
@@ -207,4 +225,34 @@ function input_search_autocomplete($string = '') {
     }
   }
   drupal_json_output($matches);
-}dfdf
+}
+
+
+/**
+ * Menu callback; get confirm form for deleting search history.
+ */
+function input_search_history_delete_page() {
+  return drupal_get_form('input_search_history_delete_confirm');
+}
+
+
+/**
+ * Build a confirm form for deletion of search history.
+ */
+function input_search_history_delete_confirm($form, &$form_state) {
+  $caption = '<p>' . t('This action cannot be undone.') . '</p>';
+  $heading = t('Are you sure you want to clear the search history?');
+  $cancel_path = 'input/examples';
+  $yes = t('Delete history');
+  $no = t('Cancel');
+  return confirm_form($form, $heading, $cancel_path, $caption, $yes, $no);
+}
+
+
+/**
+ * Submit function for the confirm deletion form.
+ */
+function input_search_history_delete_confirm_submit($form, &$form_state) {
+  variable_del('input_search_history');
+  drupal_set_message('The search history has been cleared.');
+}
