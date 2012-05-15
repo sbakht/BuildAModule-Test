@@ -13,7 +13,7 @@
  * Implements hook_menu().
  */
 function input_menu() {
-  $items['input/examples'] = array(
+  $items['input/examples'] = array(hjkhjkhjhjkh
     'title' => 'Form API examples',
     'description' => 'Example of using the Form API.',
     'page callback' => 'drupal_get_form',
