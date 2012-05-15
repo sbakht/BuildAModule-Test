@@ -168,7 +168,7 @@ function assets_unmanaged_delete_callback() {
   if (!strpos($_GET['file'], 'public://assets/unmanaged/') === 0) {
     drupal_set_message(t("Sorry, you can't delete that file."), 'error');
     $error = TRUE;
-  }
+  }dfdf
 
   // Throw an error if the file does not exist.
   if (!file_exists($_GET['file'])) {
