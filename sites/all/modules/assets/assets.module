@@ -25,6 +25,13 @@ function assets_menu() {
     'page callback' => 'assets_display_unmanaged_files_page',
     'access callback' => TRUE,
   );
+  $items['assets/unmanaged/delete'] = array(
+    'title' => 'View unmanaged files',
+    'description' => 'View thumbnails of unmanaged files.',
+    'page callback' => 'assets_unmanaged_delete_callback',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
   return $items;
 }
 
@@ -144,8 +151,36 @@ function assets_display_unmanaged_files_page() {
       <div style="float:left;margin:10px;">
         ' . theme('image_style', array('style_name' => 'thumbnail', 'path' => $file->uri)) . '
         <div>' . l('View full size image', file_create_url($file->uri)) . '</div>
+        <div>' . l('Delete', 'assets/unmanaged/delete', array('query' => array('destination' => current_path(), 'file' => $file->uri))) . '</div>
       </div>';
   }
   
   return $output;
+}
+
+
+/**
+ * Menu callback; Takes care of deletion for unmanaged files.
+ */
+function assets_unmanaged_delete_callback() {
+
+  // Throw an error if the request is in the wrong directory.
+  if (!strpos($_GET['file'], 'public://assets/unmanaged/') === 0) {
+    drupal_set_message(t("Sorry, you can't delete that file."), 'error');
+    $error = TRUE;
+  }
+
+  // Throw an error if the file does not exist.
+  if (!file_exists($_GET['file'])) {
+    drupal_set_message(t("Sorry, that file does not exist."), 'error');
+    $error = TRUE;
+  }
+
+  // All is good, go ahead and delete the file.
+  if (!isset($error)) {
+    drupal_unlink($_GET['file']);
+    drupal_set_message(t("The file %file has been deleted.", array('%file' => $_GET['file'])));
+  }
+  
+  drupal_goto($_GET['destination']);
 }
