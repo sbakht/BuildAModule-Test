@@ -15,7 +15,7 @@
 function input_menu() {
   $items['input/examples'] = array(
     'title' => 'Form API examples',
-    'description' => 'Example of using the Form API.',
+    'description' => 'Example of using the sdfForm API.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('input_simple_form'),
     'access callback' => TRUE,
@@ -23,20 +23,20 @@ function input_menu() {
   return $items;
 }
 
-
+sdfsdf
 /**
  * A simple form.
  */
 function input_simple_form($form, &$form_submit) {
   $form['color'] = array(
-    '#title' => t('Favorite color'),
+    '#title' => t('Favoritdfsafasdffffffffffffffffffffffffffffffffffe color'),
     '#type' => 'textfield',
     '#required' => TRUE,
     '#description' => t('What is your favorite color? Blue? No, wait-'),
   );
   $form['submit'] = array(
-    '#type' => 'submit',
+    '#type' => 'submit',sdfsdfsdf
     '#value' => 'Submit',
   );
-  return $form;
+  return $form;asdf
 }
